@@ -14,6 +14,6 @@ Watch Full Tutorials on:
 cd login && flutter run -d chrome
 ```
 
-## Run Login sample for web target output:
+## Run Login sample for web target output
 
 ![Login Screenshot](https://github.com/WatchMeProg/WatchMeProg/blob/master/login/login_screenshot.png "Login Screenshot")
