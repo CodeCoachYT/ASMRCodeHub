@@ -1,10 +1,8 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
-import 'dart:html' as html;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,6 +46,24 @@ class _SnakeGameViewState extends State<SnakeGameView> {
 
   late Timer timer;
 
+  void _handleSwipe(DragUpdateDetails details) {
+    final dx = details.delta.dx;
+    final dy = details.delta.dy;
+    if (dx.abs() > dy.abs()) {
+      if (dx > 0) {
+        setState(() => direction = Direction.right);
+      } else {
+        setState(() => direction = Direction.left);
+      }
+    } else {
+      if (dy > 0) {
+        setState(() => direction = Direction.down);
+      } else {
+        setState(() => direction = Direction.up);
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -80,8 +96,11 @@ class _SnakeGameViewState extends State<SnakeGameView> {
   bool snakeLeftViewport() {
     final head = snake[0];
     if (head.dx < 0 || head.dy < 0) return true;
-    final width = html.window.innerWidth!;
-    final height = html.window.innerHeight!;
+
+    var logicalScreenSize = window.physicalSize / window.devicePixelRatio;
+    var width = logicalScreenSize.width;
+    var height = logicalScreenSize.height;
+
     if (head.dx > width ~/ tileDimension || head.dy > height ~/ tileDimension) {
       return true;
     }
@@ -125,8 +144,9 @@ class _SnakeGameViewState extends State<SnakeGameView> {
             break;
         }
         final Random random = Random();
-        final width = html.window.innerWidth!;
-        final height = html.window.innerHeight!;
+        var logicalScreenSize = window.physicalSize / window.devicePixelRatio;
+        var width = logicalScreenSize.width;
+        var height = logicalScreenSize.height;
 
         if (snake.last == food) {
           food = Offset(
@@ -152,61 +172,76 @@ class _SnakeGameViewState extends State<SnakeGameView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              color: Colors.black,
-              child: CustomPaint(
-                painter: SnakePainter(
-                  snake,
-                  food,
-                  tileDimension,
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragUpdate: _handleSwipe,
+          onVerticalDragUpdate: _handleSwipe,
+          child: Stack(
+            children: [
+              Container(
+                color: Colors.black,
+                child: CustomPaint(
+                  painter: SnakePainter(
+                    snake,
+                    food,
+                    tileDimension,
+                  ),
                 ),
               ),
-            ),
-            if (gameOver)
-              Center(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: 5,
-                    sigmaY: 5,
-                  ),
-                  child: Container(
-                    width: 300,
-                    height: 250,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(25),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(25),
+              if (gameOver)
+                Center(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 5,
+                      sigmaY: 5,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Text(
-                          'Game Over',
-                          style: TextStyle(
-                            fontSize: 32,
-                            color: Colors.white,
-                          ),
+                    child: Container(
+                      width: 300,
+                      height: 250,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(25),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            gameOver = false;
+                            initGame();
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            Text(
+                              'Game Over',
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              kIsWeb
+                                  ? 'Press Enter to play again'
+                                  : 'Click to play again',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 26,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20),
-                        Text(
-                          'Press Enter to play again',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 26,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            else
-              Container()
-          ],
+                )
+              else
+                Container()
+            ],
+          ),
         ),
       ),
     );
