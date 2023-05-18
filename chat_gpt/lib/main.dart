@@ -226,8 +226,8 @@ class MessageBubble extends StatelessWidget {
                 height: 16,
               ),
               if (message.isEmpty)
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     SizedBox(
                       width: 24,
                       height: 24,

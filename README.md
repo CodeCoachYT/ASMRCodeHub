@@ -1,6 +1,6 @@
 # Hi there 👋
 
-## Collection of WatchMeProg Youtube Channel
+## Collection of ASMR ProgHub Youtube Channel
 
 Watch Full Tutorials on:
 

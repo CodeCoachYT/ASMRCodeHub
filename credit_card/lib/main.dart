@@ -59,8 +59,8 @@ class CreditCardApp extends StatelessWidget {
                   end: Alignment.bottomCenter,
                 ),
               ),
-              child: Stack(
-                children: const [
+              child: const Stack(
+                children: [
                   Positioned(
                     top: 16.0,
                     right: 16.0,

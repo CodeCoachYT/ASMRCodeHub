@@ -68,6 +68,7 @@ class _SnakeGameViewState extends State<SnakeGameView> {
   void initState() {
     super.initState();
 
+    // ignore: deprecated_member_use
     window.onKeyData = (final keyData) {
       if (keyData.logical == LogicalKeyboardKey.arrowRight.keyId) {
         setState(() => direction = Direction.right);
@@ -97,6 +98,7 @@ class _SnakeGameViewState extends State<SnakeGameView> {
     final head = snake[0];
     if (head.dx < 0 || head.dy < 0) return true;
 
+    // ignore: deprecated_member_use
     var logicalScreenSize = window.physicalSize / window.devicePixelRatio;
     var width = logicalScreenSize.width;
     var height = logicalScreenSize.height;
@@ -144,6 +146,7 @@ class _SnakeGameViewState extends State<SnakeGameView> {
             break;
         }
         final Random random = Random();
+        // ignore: deprecated_member_use
         var logicalScreenSize = window.physicalSize / window.devicePixelRatio;
         var width = logicalScreenSize.width;
         var height = logicalScreenSize.height;
@@ -211,9 +214,9 @@ class _SnakeGameViewState extends State<SnakeGameView> {
                             initGame();
                           });
                         },
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
+                          children: [
                             Text(
                               'Game Over',
                               style: TextStyle(
