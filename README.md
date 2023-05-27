@@ -1,6 +1,6 @@
 # Hi there 👋
 
-## Collection of ASMR ProgHub Youtube Channel
+## Collection of ASMR CodeHub Youtube Channel
 
 Watch Full Tutorials on:
 
